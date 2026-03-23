@@ -57,7 +57,13 @@
   </table>
 
   <script>
-    fetch('http://localhost:5000/api/users')
+    // En production avec Docker, utilisez le nom du service
+    // En développement local, utilisez localhost
+    const API_URL = window.location.hostname === 'localhost' 
+        ? 'http://localhost:5001'  // Pour le développement local
+        : 'http://backend:5000';    // Pour Docker (nom du service)
+    
+    fetch(`${API_URL}/api/users`)
       .then(res => res.json())
       .then(data => {
         const tbody = document.querySelector("#users-table tbody");
@@ -69,10 +75,11 @@
         });
       })
       .catch(err => {
+        console.error('Erreur détaillée:', err);
         const tbody = document.querySelector("#users-table tbody");
-        tbody.innerHTML = `<tr><td colspan="2" style="color:red;">Erreur : ${err}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="2" style="color:red;">Erreur : ${err.message}</td></tr>`;
       });
-  </script>
+</script>
 </body>
 
 </html>
